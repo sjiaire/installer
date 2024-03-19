@@ -37,28 +37,6 @@ class InstallHelperController extends Controller
         ]);
 
         try {
-            if (empty(config('installer.item_id'))) {
-                throw new Exception('CODESHAPER_ITEM_ID not found in .env');
-            }
-            // check from owr server
-            $verify = Http::acceptJson()
-                ->post(config('installer.site_url').'/api/envato-buyers', $validated + [
-                        'item_id' => config('installer.item_id'),
-                        'details' => [
-                            'item_id' => config('installer.item_id'),
-                            'client_ip' => $request->ip(),
-                            'installed_at' => now(),
-                            'server' => $request->server(),
-                        ],
-                    ]);
-
-            $response = $verify->json();
-
-            if (!$verify->failed()) {
-                return back()->withErrors([
-                    'purchase_code' => $response['message'],
-                ])->withInput();
-            }
 
             $verifiedLogFile = storage_path('verified');
             $dateStamp = date('Y/m/d h:i:sa');
